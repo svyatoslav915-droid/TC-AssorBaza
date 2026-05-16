@@ -1,1 +1,1196 @@
-# TC-AssorBaza
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlcoBase — Библиотека алкоголя | True Cost</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #1a1a1a;
+            color: #d4d4d4;
+            line-height: 1.6;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a1a1a, #2d1f0a);
+            border-bottom: 2px solid #d4af37;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header h1 { color: #d4af37; font-size: 2em; }
+        .header .subtitle { color: #a0a0a0; font-size: 1em; margin-top: 5px; }
+        .header .dedication { 
+            color: #d4af37; font-size: 1.2em; margin-top: 15px; font-style: italic;
+            border-top: 1px solid #3a3a3a; padding-top: 15px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        
+        .toc {
+            background: #252525;
+            border: 2px solid #d4af37;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        .toc h2 { color: #d4af37; margin-bottom: 15px; text-align: center; }
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+        .toc-grid a {
+            display: block;
+            color: #d4d4d4;
+            text-decoration: none;
+            padding: 10px 12px;
+            background: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            text-align: center;
+            transition: all 0.2s;
+            font-size: 0.85em;
+        }
+        .toc-grid a:hover { background: #3a3a3a; color: #d4af37; border-color: #d4af37; }
+        
+        details {
+            margin-bottom: 10px;
+        }
+        details summary {
+            background: #252525;
+            border: 2px solid #d4af37;
+            border-radius: 8px;
+            padding: 15px 20px;
+            cursor: pointer;
+            color: #d4af37;
+            font-size: 1.4em;
+            font-weight: bold;
+            list-style: none;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        details summary::-webkit-details-marker { display: none; }
+        details summary::before { content: '▶'; font-size: 0.8em; transition: transform 0.3s; display: inline-block; width: 20px; }
+        details[open] summary::before { transform: rotate(90deg); }
+        details summary:hover { background: #2d2d2d; }
+        details summary .count {
+            font-size: 0.7em;
+            color: #a0a0a0;
+            font-weight: normal;
+            margin-left: auto;
+        }
+        
+        .card {
+            background: #252525;
+            border: 1px solid #3a3a3a;
+            border-left: 4px solid #d4af37;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 20px;
+        }
+        .card h3 { color: #d4af37; font-size: 1.2em; margin-bottom: 8px; }
+        .card .meta {
+            color: #a0a0a0;
+            font-size: 0.8em;
+            margin-bottom: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card .meta span {
+            background: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .card .tag {
+            display: inline-block;
+            background: #d4af37;
+            color: #1a1a1a;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-right: 4px;
+        }
+        .card .section { margin: 10px 0; font-size: 0.9em; }
+        .card .section strong { color: #f0d060; }
+        .card .script {
+            background: #2d2d2d;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid #d4af37;
+            font-style: italic;
+            margin-top: 12px;
+            font-size: 0.9em;
+        }
+        .card .history {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #3a3a3a;
+            color: #a0a0a0;
+            font-size: 0.85em;
+        }
+        .card .history strong { color: #f0d060; }
+        .card .method {
+            margin-top: 10px;
+            padding: 10px;
+            background: #1a1a1a;
+            border-radius: 6px;
+            font-size: 0.85em;
+        }
+        .card .method strong { color: #f0d060; }
+        hr { border-color: #3a3a3a; }
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #d4af37;
+            font-size: 1.2em;
+            font-style: italic;
+        }
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.4em; }
+            details summary { font-size: 1.1em; padding: 12px 15px; }
+            .card { padding: 12px; margin: 10px 5px; }
+            .card h3 { font-size: 1em; }
+            .toc-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🍸 AlcoBase</h1>
+    <p class="subtitle">True Cost — библиотека алкоголя для персонала</p>
+    <p class="dedication">⭐ Старший Бармен Супер — Любим ⭐</p>
+</div>
+
+<div class="container">
+
+    <!-- ===== СОДЕРЖАНИЕ ===== -->
+    <div class="toc">
+        <h2>📋 Содержание</h2>
+        <div class="toc-grid">
+            <a href="#general">📚 Общая информация</a>
+            <a href="#vodka">🍸 Водка</a>
+            <a href="#whiskey">🥃 Виски</a>
+            <a href="#gin">🍸 Джин</a>
+            <a href="#rum">🥃 Ром</a>
+            <a href="#tequila">🌵 Текила</a>
+            <a href="#mezcal">🌵 Мескаль</a>
+            <a href="#cognac">🍷 Коньяк</a>
+            <a href="#brandy">🍷 Бренди</a>
+            <a href="#calvados">🍎 Кальвадос</a>
+            <a href="#pisco">🍇 Писко</a>
+            <a href="#chacha">🍇 Чача</a>
+            <a href="#cachaca">🇧🇷 Кашаса</a>
+            <a href="#vermouth">🍷 Вермут</a>
+            <a href="#amaro">🍷 Амаро</a>
+            <a href="#liqueur">🍹 Ликёры</a>
+            <a href="#nastoyka">🍹 Настойки</a>
+            <a href="#beer">🍺 Пиво</a>
+            <a href="#sparkling">🥂 Игристые вина</a>
+            <a href="#whitewine">🥂 Белые вина</a>
+            <a href="#redwine">🍷 Красные вина</a>
+            <a href="#orangewine">🍷 Оранжевые вина</a>
+            <a href="#rosewine">💗 Розовые вина</a>
+            <a href="#sake">🍶 Саке</a>
+            <a href="#tea">🍵 Чай</a>
+            <a href="#nonalco">💧 Б/А продукция</a>
+        </div>
+    </div>
+
+    <!-- ===== ОБЩАЯ ИНФОРМАЦИЯ ===== -->
+    <details id="general">
+        <summary>📚 Общая информация <span class="count">Спирты, методы, регионы, производство вин</span></summary>
+
+        <div class="card">
+            <h3>Виды спиртов и их классификация</h3>
+            <div class="section">
+                <strong>Спирт «Альфа»</strong> — высшая категория. Только из пшеницы или ржи. Метанол ≤ 0,003%. Водки супер-премиум.<br><br>
+                <strong>Спирт «Люкс»</strong> — зерновая смесь. Многоступенчатая фильтрация. Beluga, «Арктика».<br><br>
+                <strong>Спирт «Экстра»</strong> — зерновая смесь, чуть больше примесей. Средний сегмент.<br><br>
+                <strong>Спирт «Высшей очистки»</strong> — базовый уровень. Массовые водки, настойки.<br><br>
+                <strong>Пшеничный спирт</strong> — 100% пшеница. Мягкий, сладковатый. «Онегин».<br><br>
+                <strong>Виноградный спирт</strong> — дистиллят из винограда. Коньяк, бренди, чача, писко, джины (Antidote, Cruxland).<br><br>
+                <strong>Рисовый спирт (сётю)</strong> — японский дистиллят из риса. Джин Impact.<br><br>
+                <strong>Мелассный спирт</strong> — из патоки. Основа большинства ромов.<br><br>
+                <strong>Тростниковый спирт</strong> — из сока тростника. Лёгкий, травянистый. Кашаса, Diplomatico.<br><br>
+                <strong>Солодовый спирт</strong> — из ячменного солода. Виски.<br><br>
+                <strong>Зерновой спирт</strong> — из несоложёного зерна. Зерновой виски, водка.
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Методы производства алкоголя</h3>
+            <div class="section">
+                <strong>Дистилляция</strong> — разделение жидкости нагреванием. Спирт кипит при 78,3°C, вода при 100°C.<br>
+                • Pot Still (медный куб) — ароматный дистиллят. Виски, коньяк, чача, мескаль.<br>
+                • Column Still (колонна) — чистый нейтральный спирт. Водка, зерновой виски.<br><br>
+                <strong>Ректификация</strong> — многократная дистилляция до 96,5%. Для водки.<br><br>
+                <strong>Мацерация</strong> — настаивание сырья в спирте. Настойки, джин, вермут.<br><br>
+                <strong>Паровая инфузия</strong> — ботаникалы в паровой корзине. Bombay Sapphire, Ninth Wave.<br><br>
+                <strong>Ферментация</strong> — превращение сахаров в спирт дрожжами.<br><br>
+                <strong>Выдержка</strong> — в дубовых бочках. Ваниль, карамель, цвет, мягкость.<br><br>
+                <strong>Система Солера</strong> — пирамида бочек. В бутылке всегда капля старых спиртов. Torres, херес.<br><br>
+                <strong>Квеври</strong> — грузинские глиняные кувшины в земле.<br><br>
+                <strong>Lincoln County Process</strong> — фильтрация через уголь клёна. Jack Daniel's.<br><br>
+                <strong>Тройная дистилляция</strong> — трёхкратная перегонка. Ирландский виски (Jameson, Bushmills).<br><br>
+                <strong>Метод Шарма</strong> — вторичное брожение в стали. Просекко.<br><br>
+                <strong>Традиционный метод</strong> — вторичное брожение в бутылке. Шампанское, кава.
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Регионы производства</h3>
+            <div class="section">
+                <strong>Шотландия:</strong> Highland, Speyside (Glenfiddich), Islay (Laphroaig, Bruichladdich), Lowland, Campbeltown.<br><br>
+                <strong>Ирландия:</strong> Корк (Jameson), Антрим (Bushmills), Даун (Hinch), Талламор (Tullamore D.E.W.). Тройная дистилляция.<br><br>
+                <strong>США:</strong> Кентукки (бурбон), Теннесси (Jack Daniel's).<br><br>
+                <strong>Япония:</strong> Окинава (Masahiro), Тоттори (Impact). Точность и баланс.<br><br>
+                <strong>Франция:</strong> Коньяк (Grande Champagne, Borderies), Нормандия (кальвадос), Эльзас (Antidote), Гасконь (Tariquet), Лангедок (Les Jamelles).<br><br>
+                <strong>Мексика — текила (5 штатов):</strong> Халиско (90%), Наярит, Мичоакан, Гуанахуато, Тамаулипас.<br><br>
+                <strong>Мексика — мескаль (9 штатов):</strong> Оахака (90%), Дуранго, Гуанахуато, Герреро, Мичоакан, Пуэбла, Сан-Луис-Потоси, Тамаулипас, Сакатекас.<br><br>
+                <strong>Италия:</strong> Турин (вермут), Венето (просекко, Pinot Grigio), Тоскана (амаро, вина), Сицилия (Loco Cimbali), Альто-Адидже (Pfefferer).<br><br>
+                <strong>Испания:</strong> Херес (бренди Torres, Barbadillo), Пенедес (кава), Риоха (Tempranillo).<br><br>
+                <strong>Португалия:</strong> Минью (Vinho Verde), Дору (портвейн).<br><br>
+                <strong>Россия:</strong> Мариинск (Beluga), Тамань (Поместье Голубицкое), Крым, Ставрополь (Hoppers), Алтай (иван-чай).<br><br>
+                <strong>Грузия:</strong> Кахетия (квеври, чача, Саперави).<br><br>
+                <strong>Другие:</strong> Бразилия (кашаса), Перу/Чили (писко), Венесуэла (Diplomatico), Сербия (Zvonko Bogdan), ЮАР (Cruxland).
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Производство вин: белые, красные, розовые, оранжевые, игристые</h3>
+            <div class="section">
+                <strong>Белые вина:</strong> виноград давят, кожицу удаляют ДО ферментации. Ферментация при 10-16°C в стали. Без танинов, свежие, фруктовые.<br><br>
+                <strong>Красные вина:</strong> виноград давят, сок бродит ВМЕСТЕ с кожицей 7-21 день при 25-30°C. Цвет, танины, аромат — из кожицы. После ферментации — прессование и выдержка в дубе. Яблочно-молочное брожение (смягчение кислот).<br><br>
+                <strong>Розовые вина (3 метода):</strong><br>
+                1) Прямое прессование — красный виноград прессуют как белый (лёгкий оттенок).<br>
+                2) Короткая мацерация — 6-48 часов на кожице.<br>
+                3) Сенье (Saignée) — отлив части сока из красного вина.<br><br>
+                <strong>Оранжевые вина (Amber Wine):</strong> белые сорта винифицируют как красные — сок бродит с кожицей, косточками, гребнями от недель до 6 месяцев. Контакт с кислородом. Цвет янтарный. Танины, ароматы сухофруктов, орехов, чая. Грузинские вина в квеври — эталон Amber Wine.<br><br>
+                <strong>Игристые вина (2 метода):</strong><br>
+                1) Традиционный (Méthode Traditionnelle) — вторичное брожение в бутылке. Сложный аромат бриоши. Шампанское, кава.<br>
+                2) Шарма — вторичное брожение в стали. Свежий фруктовый стиль. Просекко.
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Эфирообразование (esters) при ферментации</h3>
+            <div class="section">
+                Во время брожения дрожжи производят сотни ароматических соединений — <strong>сложных эфиров</strong>. Именно они дают вину фруктовые ароматы без добавления фруктов:<br><br>
+                🍌 Банан — изоамилацетат (Божоле Нуво)<br>
+                🍑 Персик — лактоны, бензальдегид (Рислинг, Вионье)<br>
+                🍒 Вишня — бензальдегид, эвгенол (Цвайгельт, Пино Нуар)<br>
+                🍏 Зелёное яблоко — ацетальдегид (Совиньон Блан)<br>
+                🍐 Груша — гексилацетат (Пино Гриджио)<br>
+                🍓 Клубника — фуранеол (Пино Нуар)<br><br>
+                <strong>Факторы:</strong> штамм дрожжей, температура брожения (низкая — больше фруктовых эфиров), сорт винограда.<br><br>
+                <strong>Примеры:</strong><br>
+                • Austrian Cherry Zweigelt — низкая ферментация (24-26°C), мацерация 7-10 дней, выдержка в стали (без дуба).<br>
+                • Austrian Peach (Рислинг) — холодная ферментация (10-14°C), лактоны дают персиковые ноты.
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Почему грузинские вина — Amber Wine</h3>
+            <div class="section">
+                <strong>Amber Wine (янтарное вино)</strong> — международный термин, принятый OIV. Отличается от «Orange Wine» (общий термин).<br><br>
+                <strong>Признаки Amber Wine:</strong><br>
+                • Квеври — глиняные кувшины в земле (стабильная температура 14-15°C)<br>
+                • Длительная мацерация — до 6 месяцев на кожице, косточках, гребнях<br>
+                • Природные дрожжи (никаких культурных штаммов)<br>
+                • Окислительный стиль — орехи, мёд, чай, сухофрукты<br>
+                • Цвет янтарный (не апельсиновый)
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Виски: бленд, солодовый, односолодовый — отличия</h3>
+            <div class="section">
+                <strong>Бленд (Blended Whisky)</strong> — смесь солодового (pot still) и зернового (column still) виски с разных винокурен. Мягкий, доступный, стабильный. Примеры: Grant's, Dewar's (Wiseman), Stateless.<br><br>
+                <strong>Солодовый виски (Blended Malt / Pure Malt)</strong> — смесь ТОЛЬКО солодовых виски с РАЗНЫХ винокурен. Без зернового. Сложнее бленда. Примеры: Masahiro Pure Malt, Fujigane Pure Malt.<br><br>
+                <strong>Односолодовый виски (Single Malt)</strong> — 100% ячменный солод, ОДНА винокурня. Вершина качества. Примеры: Laphroaig 10, Glenfiddich 12, Glengarry 12, Bushmills 10.<br><br>
+                <strong>Аналогия:</strong> Бленд = оркестр, Blended Malt = хор, Single Malt = солист.
+            </div>
+        </div>
+    </details>
+
+    <!-- ===== ВОДКА ===== -->
+    <details id="vodka">
+        <summary>🍸 Водка <span class="count">5 карточек</span></summary>
+        <div class="card">
+            <h3>Beluga Noble <span class="tag">Водка</span></h3>
+            <div class="meta"><span>🌍 Россия</span><span>📍 Мариинск</span><span>🍸 40%</span><span>⚗️ Люкс</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Флагманская водка. 30 дней отдыха после дистилляции. Мёд, овсяные хлопья, экстракт расторопши.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Мягкий, бархатистый. Зерновые тона, лёгкая сладость.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Чёрная икра, соленья, копчёная рыба.</div>
+            <div class="script">💬 «Beluga Noble — эталон русской премиальной водки. 30 дней отдыха. Очень мягкая, бархатистая».</div>
+            <div class="history"><strong>📜 История:</strong> Бренд создан в 2002 году. Название — от белуги, символа роскоши. Мариинский завод с 1902 года. Вода из скважин 300 м. Экспорт в 80+ стран.</div>
+        </div>
+        <div class="card">
+            <h3>Beluga Transatlantic Racing <span class="tag">Водка</span></h3>
+            <div class="meta"><span>🌍 Россия</span><span>📍 Мариинск</span><span>🍸 40%</span><span>⚗️ Люкс</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Лимитированная серия. Солод Beluga, экстракт дикой земляники. 45 дней отдыха.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Шелковистый, цитрусовые и земляничные ноты.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Морепродукты, устрицы.</div>
+            <div class="script">💬 «Beluga Transatlantic Racing — лимитированный выпуск с дикой земляникой».</div>
+        </div>
+        <div class="card">
+            <h3>Beluga Gold Line <span class="tag">Водка</span></h3>
+            <div class="meta"><span>🌍 Россия</span><span>📍 Сибирь</span><span>🍸 40%</span><span>⚗️ Люкс</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Ручная работа. Экстракт родиолы розовой, рис. 5 фильтраций. Бутылки пронумерованы, запечатаны воском.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Исключительно мягкий. Травяные нюансы, зерновая сладость.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Чёрная икра, устрицы.</div>
+            <div class="script">💬 «Beluga Gold Line — водка ручной работы. Пять фильтраций. Только в чистом виде».</div>
+        </div>
+        <div class="card">
+            <h3>Онегин <span class="tag">Водка</span></h3>
+            <div class="meta"><span>🌍 Россия</span><span>📍 Санкт-Петербург</span><span>🍸 40%</span><span>⚗️ Пшеничный</span></div>
+            <div class="section"><strong>📋 Производство:</strong> 100% пшеница. Медовый дистиллят, бурбонская ваниль, настои изюма, миндаля, кураги.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Сбалансированный. Миндаль, мёд, ваниль, изюм.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Деликатесы русской кухни.</div>
+            <div class="script">💬 «Онегин — водка пушкинской эпохи. Мёд, изюм, миндаль и ваниль».</div>
+        </div>
+        <div class="card">
+            <h3>Арктика <span class="tag">Водка</span></h3>
+            <div class="meta"><span>🌍 Россия</span><span>🍸 40%</span><span>⚗️ Люкс</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Настои сибирской лиственницы, арктической розы и ламинарии.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Мягкий, травянистые и цветочные ноты.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Морепродукты, рыбные закуски.</div>
+            <div class="script">💬 «Арктика — водка на спирте Люкс с настоями сибирских трав».</div>
+        </div>
+    </details>
+
+    <!-- ===== ВИСКИ ===== -->
+    <details id="whiskey">
+        <summary>🥃 Виски <span class="count">19 карточек</span></summary>
+        <div class="card">
+            <h3>Laphroaig 10 <span class="tag">Single Malt</span><span class="tag">Islay</span></h3>
+            <div class="meta"><span>🌍 Шотландия</span><span>📍 Islay</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Торфяная сушка солода. Вода из озера Килбрайд. 10 лет в бурбонных бочках.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Мощный дым, йод, морские водоросли. За дымом — ваниль и мёд.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Голубые сыры, копчёный лосось, устрицы.</div>
+            <div class="script">💬 «Laphroaig 10 — легенда Айлы. Вы либо влюбитесь в этот дым, либо нет».</div>
+            <div class="history"><strong>📜 История:</strong> Основана в 1815 году. С гэльского — «живописная долина у широкого залива». Собственные солодильни. Торф с морскими водорослями. Королевский ордер 1994 года.</div>
+        </div>
+        <div class="card">
+            <h3>Glenfiddich 12 <span class="tag">Single Malt</span><span class="tag">Speyside</span></h3>
+            <div class="meta"><span>🌍 Шотландия</span><span>📍 Speyside</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Самый продаваемый single malt в мире. Бурбон + херес. «Женитьба» в дубовых чанах.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Свежий. Зелёное яблоко, груша, ваниль.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Канапе с лососем, цыплёнок с лимоном.</div>
+            <div class="script">💬 «Glenfiddich 12 — самый популярный single malt в мире с 1887 года».</div>
+            <div class="history"><strong>📜 История:</strong> Уильям Грант с 9 детьми построил винокурню вручную. Семья владеет до сих пор. В 1963 году первым начал экспорт single malt.</div>
+        </div>
+        <div class="card">
+            <h3>Glengarry Single Malt 12 <span class="tag">Single Malt</span><span class="tag">Highland</span></h3>
+            <div class="meta"><span>🌍 Шотландия</span><span>📍 Highland</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Классический хайлендский солодовый виски. 12 лет выдержки.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Мягкий, медовый. Печёное яблоко, вереск, дубовая ваниль.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Лосось на гриле, мягкие сыры, яблочный пирог.</div>
+            <div class="script">💬 «Glengarry 12 — классика Хайленда. Мягкий, медовый, без торфа».</div>
+        </div>
+        <div class="card">
+            <h3>Bruichladdich Port Charlotte 10 <span class="tag">Single Malt</span><span class="tag">Islay</span></h3>
+            <div class="meta"><span>🌍 Шотландия</span><span>📍 Islay</span><span>🍸 50%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Торф 40 ppm. Без холодной фильтрации, натуральный цвет.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Мощный торфяной дым, мармелад, карамель, морская соль.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Копчёные рёбрышки, утка, выдержанный чеддер.</div>
+            <div class="script">💬 «Port Charlotte 10 — современная классика Айлы. 40 ppm торфа, без фильтрации».</div>
+        </div>
+        <div class="card">
+            <h3>Grant's Triple Wood 3 <span class="tag">Бленд</span></h3>
+            <div class="meta"><span>🌍 Шотландия</span><span>📍 Speyside/Highland</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Купаж от William Grant. Тройная выдержка: бурбон, херес, новый дуб.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Округлый, сладковатый. Груша, солод, мягкие специи.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Коктейли, виски-кола, бургеры.</div>
+            <div class="script">💬 «Grant's Triple Wood — купаж с тройной выдержкой. Идеален для коктейлей».</div>
+        </div>
+        <div class="card">
+            <h3>Tullamore D.E.W. Original <span class="tag">Бленд</span><span class="tag">Ирландия</span></h3>
+            <div class="meta"><span>🌍 Ирландия</span><span>📍 Талламор</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Тройная дистилляция, тройной купаж. Выдержка в бурбоне, хересе, роме.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Гладкий. Зелёное яблоко, ваниль, карамель.</div>
+            <div class="script">💬 «Tullamore D.E.W. — ирландская классика с тройным купажом».</div>
+            <div class="history"><strong>📜 История:</strong> D.E.W. — инициалы Дэниела Э. Уильямса. Слоган «Give every man his Dew». Закрыт в 1954, возрождён в 2014. Символ — феникс.</div>
+        </div>
+        <div class="card">
+            <h3>Hinch Distiller's Cut <span class="tag">Бленд</span><span class="tag">Ирландия</span></h3>
+            <div class="meta"><span>🌍 Ирландия</span><span>📍 Даун</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Лимитированная серия. Финиш в бочках из-под Шардоне.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Шелковистый. Печёное яблоко, медовые соты, белый виноград.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Гребешки, лосось на гриле.</div>
+            <div class="script">💬 «Hinch Distiller's Cut — лимитированный релиз с финишем в Шардоне».</div>
+        </div>
+        <div class="card">
+            <h3>Hinch Double Wood 5 <span class="tag">Бленд</span><span class="tag">Ирландия</span></h3>
+            <div class="meta"><span>🌍 Ирландия</span><span>📍 Даун</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> 5 лет выдержки в бурбоне и хересе.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Мягкий. Карамель, мёд, курага.</div>
+            <div class="script">💬 «Hinch Double Wood — ирландский виски двойной выдержки».</div>
+        </div>
+        <div class="card">
+            <h3>Jameson <span class="tag">Бленд</span><span class="tag">Ирландия</span></h3>
+            <div class="meta"><span>🌍 Ирландия</span><span>📍 Корк</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Самый продаваемый ирландский виски. Тройная дистилляция.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Гладкий. Ваниль, мёд, пряные ноты.</div>
+            <div class="script">💬 «Jameson — душа Ирландии. Тройная дистилляция».</div>
+            <div class="history"><strong>📜 История:</strong> Основан в 1780 году Джоном Джеймсоном. Девиз «Sine Metu». Первым начал тройную дистилляцию.</div>
+        </div>
+        <div class="card">
+            <h3>Bushmills Original <span class="tag">Бленд</span><span class="tag">Ирландия</span></h3>
+            <div class="meta"><span>🌍 Ирландия</span><span>📍 Антрим</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Старейшая лицензированная винокурня в мире (1608).</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Мягкий. Зелёное яблоко, мёд, ваниль.</div>
+            <div class="script">💬 «Bushmills Original — виски от старейшей винокурни мира с 1608 года».</div>
+        </div>
+        <div class="card">
+            <h3>Bushmills Black Bush <span class="tag">Бленд</span><span class="tag">Ирландия</span></h3>
+            <div class="meta"><span>🌍 Ирландия</span><span>📍 Антрим</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> До 80% солодового виски. Выдержка в хересных бочках Олоросо.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Плотный. Изюм, чернослив, шоколад, орехи.</div>
+            <div class="script">💬 «Black Bush — тёмная лошадка Ирландии. 80% солода, хересные бочки».</div>
+        </div>
+        <div class="card">
+            <h3>Bushmills 10 Single Malt <span class="tag">Single Malt</span><span class="tag">Ирландия</span></h3>
+            <div class="meta"><span>🌍 Ирландия</span><span>📍 Антрим</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> 100% солод. 10 лет в бурбоне, финиш в хересе.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Шёлковый. Мёд, спелые фрукты, шоколад.</div>
+            <div class="script">💬 «Bushmills 10 лет — односолодовый ирландский виски».</div>
+        </div>
+        <div class="card">
+            <h3>Jack Daniel's Old No.7 <span class="tag">Теннесси</span></h3>
+            <div class="meta"><span>🌍 США</span><span>📍 Теннесси</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Lincoln County Process — фильтрация через 3 метра угля сахарного клёна.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Мягкий. Карамель, ваниль, лёгкий дымок.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Jack & Coke, стейк, бургеры.</div>
+            <div class="script">💬 «Jack Daniel's — легенда. Фильтрация через уголь даёт ту самую гладкость».</div>
+            <div class="history"><strong>📜 История:</strong> Старейшая зарегистрированная винокурня США (1866). Джек Дэниел начал в 13 лет. Old No.7 — загадка. Вода из пещерного источника 13°C.</div>
+        </div>
+        <div class="card">
+            <h3>Masahiro Pure Malt <span class="tag">Blended Malt</span><span class="tag">Япония</span></h3>
+            <div class="meta"><span>🌍 Япония</span><span>📍 Окинава</span><span>🍸 43%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Винокурня с 1883 года. Субтропический климат ускоряет выдержку.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Ананас, манго, мёд.</div>
+            <div class="script">💬 «Masahiro Pure Malt — японский виски с субтропической душой».</div>
+        </div>
+        <div class="card">
+            <h3>Fujigane Pure Malt Sherry Cask 12 <span class="tag">Blended Malt</span><span class="tag">Япония</span></h3>
+            <div class="meta"><span>🌍 Япония</span><span>🍸 43%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> 12 лет в бочках из-под хереса.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Богатый. Изюм, инжир, тёмный шоколад.</div>
+            <div class="script">💬 «Fujigane 12 Sherry Cask — японский виски, который звучит как шотландец».</div>
+        </div>
+        <div class="card">
+            <h3>Nirasaki Japan Blend <span class="tag">Бленд</span><span class="tag">Япония</span></h3>
+            <div class="meta"><span>🌍 Япония</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Японский купаж. Лёгкий, цветочный.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Белые цветы, груша, цитрусы.</div>
+            <div class="script">💬 «Nirasaki — японский бленд для Highball».</div>
+        </div>
+        <div class="card">
+            <h3>Wiseman (Dewar's) <span class="tag">Бленд</span><span class="tag">Шотландия</span></h3>
+            <div class="meta"><span>🌍 Шотландия</span><span>📍 Highland</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Бленд Dewar's (основан в 1846). Двойная выдержка (Double Ageing). Основа — Aberfeldy.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Гладкий, медовый. Ириска, груша, дуб.</div>
+            <div class="script">💬 «Wiseman — в честь мудрейшего мастера купажа Dewar's».</div>
+        </div>
+        <div class="card">
+            <h3>Stateless (MacNair's) <span class="tag">Бленд</span><span class="tag">Шотландия</span></h3>
+            <div class="meta"><span>🌍 Шотландия</span><span>📍 Highland/Islay</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Бленд от Glasgow Distillery. Лёгкая торфяная нота.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Питкий. Мёд, печёное яблоко, тонкий дым.</div>
+            <div class="script">💬 «Stateless — современный шотландский бленд с лёгким дымком».</div>
+        </div>
+        <div class="card">
+            <h3>Bellevoye Édition Tourbée <span class="tag">Single Malt</span><span class="tag">Франция</span></h3>
+            <div class="meta"><span>🌍 Франция</span><span>📍 Эльзас/Коньяк/Нормандия</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Первый French Single Malt. Тройной терруар. Выдержка в сотерне.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Маслянистый. Печёное яблоко, абрикос, мёд, тонкий дым.</div>
+            <div class="script">💬 «Bellevoye Tourbée — французский взгляд на торфяной виски».</div>
+        </div>
+    </details>
+
+    <!-- ===== ДЖИН ===== -->
+    <details id="gin">
+        <summary>🍸 Джин <span class="count">9 карточек</span></summary>
+        <div class="card">
+            <h3>Antidote London Dry Gin <span class="tag">Франция</span></h3>
+            <div class="meta"><span>🌍 Франция</span><span>📍 Эльзас</span><span>🍸 43%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Виноградная основа. 5 дистилляций. 17 ботаникалов.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Маслянистый. Лаванда, цитрус, можжевельник, имбирное тепло.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> G&T с апельсином и розмарином, козий сыр.</div>
+            <div class="script">💬 «Antidote — французский джин на винограде. Не колет, а гладит».</div>
+        </div>
+        <div class="card">
+            <h3>Ninth Wave Irish Gin <span class="tag">Ирландия</span></h3>
+            <div class="meta"><span>🌍 Ирландия</span><span>📍 Даун</span><span>🍸 43%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> 9 ботаникалов. Вербена в паровой корзине. Самый титулованный джин 2020.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Лимонный курд, вербена, кардамон.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> G&T с грейпфрутом, устрицы.</div>
+            <div class="script">💬 «Ninth Wave — самый титулованный джин 2020 года».</div>
+        </div>
+        <div class="card">
+            <h3>Cruxland London Dry Gin <span class="tag">ЮАР</span></h3>
+            <div class="meta"><span>🌍 ЮАР</span><span>📍 Калахари</span><span>🍸 43%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> 100% виноградный спирт. Трюфель Калахари.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Можжевельник, трюфель, землистые ноты.</div>
+            <div class="script">💬 «Cruxland — джин с трюфелями из пустыни Калахари».</div>
+        </div>
+        <div class="card">
+            <h3>Impact Japanese Craft Gin <span class="tag">Япония</span></h3>
+            <div class="meta"><span>🌍 Япония</span><span>📍 Тоттори</span><span>🍸 47%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Рисовая основа (сётю). Куромодзи, юдзу. Chiyomusubi с 1865 года.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Шёлковый. Цитрусы, куромодзи, йогуртовое послевкусие.</div>
+            <div class="script">💬 «Impact — японский джин с легендарным куромодзи».</div>
+        </div>
+        <div class="card">
+            <h3>Canaima Gin <span class="tag">Венесуэла</span></h3>
+            <div class="meta"><span>🌍 Венесуэла</span><span>📍 Амазонка</span><span>🍸 47%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> 10 амазонских ботаникалов. 10% прибыли на восстановление лесов.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Острый, фруктовый. Асаи, копуасу.</div>
+            <div class="script">💬 «Canaima — джин из сердца Амазонки».</div>
+        </div>
+        <div class="card">
+            <h3>The Botanist <span class="tag">Шотландия</span></h3>
+            <div class="meta"><span>🌍 Шотландия</span><span>📍 Айла</span><span>🍸 46%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> 22 местных ботаникала ручного сбора. Bruichladdich.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Вереск, мята, тимьян, цитрус.</div>
+            <div class="script">💬 «The Botanist — душа острова Айла в бокале».</div>
+        </div>
+        <div class="card">
+            <h3>Hoppers Original Dry <span class="tag">Россия</span></h3>
+            <div class="meta"><span>🌍 Россия</span><span>📍 Ставрополь</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Саган-дайля, кафрский лайм. Завод «Стрижамент».</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Питкий. Цитрусы, можжевельник, травы.</div>
+            <div class="script">💬 «Hoppers — российский джин с саган-дайля».</div>
+        </div>
+        <div class="card">
+            <h3>Green Baboon Old Tom <span class="tag">Россия</span></h3>
+            <div class="meta"><span>🌍 Россия</span><span>📍 Георгиевск</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Исторический стиль Old Tom (подслащенный). Novabev Group.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Округлый. Пряный, ягодный.</div>
+            <div class="script">💬 «Green Baboon Old Tom — сладковатый джин XVIII века».</div>
+        </div>
+        <div class="card">
+            <h3>Bombay Sapphire <span class="tag">Великобритания</span></h3>
+            <div class="meta"><span>🌍 Великобритания</span><span>📍 Англия</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Паровая инфузия 10 ботаникалов.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Сбалансированный. Можжевельник, миндаль, лимон.</div>
+            <div class="script">💬 «Bombay Sapphire — икона стиля и баланса».</div>
+        </div>
+    </details>
+
+    <!-- ===== ТЕКИЛА ===== -->
+    <details id="tequila">
+        <summary>🌵 Текила <span class="count">5 карточек + 5 регионов</span></summary>
+        <div class="card">
+            <h3>Регионы производства текилы (5 штатов)</h3>
+            <div class="section">1. <strong>Халиско</strong> — 90% производства. 2. <strong>Наярит</strong> — De Los Dorados. 3. <strong>Мичоакан</strong>. 4. <strong>Гуанахуато</strong>. 5. <strong>Тамаулипас</strong>.</div>
+        </div>
+        <div class="card">
+            <h3>Jose Cuervo 1800 Blanco <span class="tag">100% агава</span></h3>
+            <div class="meta"><span>🌍 Мексика</span><span>📍 Халиско</span><span>🍸 38%</span></div>
+            <div class="section"><strong>👃 Органолептика:</strong> Печёная агава, масло лайма, белый перец.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Палома, Маргарита.</div>
+        </div>
+        <div class="card">
+            <h3>De Los Dorados Silver <span class="tag">Mixto</span></h3>
+            <div class="meta"><span>🌍 Мексика</span><span>📍 Наярит</span><span>🍸 40%</span></div>
+            <div class="section"><strong>👃 Органолептика:</strong> Острый, чистый. Агава, перец.</div>
+        </div>
+        <div class="card">
+            <h3>Lokita Blanco Puro Artesanal <span class="tag">100% агава</span></h3>
+            <div class="meta"><span>🌍 Мексика</span><span>📍 Халиско</span><span>🍸 40%</span></div>
+            <div class="section"><strong>👃 Органолептика:</strong> Фруктовый. Груша, яблоко, ананас.</div>
+        </div>
+        <div class="card">
+            <h3>Agavita Blanco <span class="tag">Mixto</span></h3>
+            <div class="meta"><span>🌍 Мексика</span><span>📍 Халиско</span><span>🍸 40%</span></div>
+            <div class="section"><strong>👃 Органолептика:</strong> Свежий. Агава, травы, перец.</div>
+        </div>
+        <div class="card">
+            <h3>Agavita Gold <span class="tag">Mixto</span></h3>
+            <div class="meta"><span>🌍 Мексика</span><span>📍 Халиско</span><span>🍸 38%</span></div>
+            <div class="section"><strong>👃 Органолептика:</strong> Мягкий. Карамель, ваниль, лайм.</div>
+        </div>
+    </details>
+
+    <!-- ===== МЕСКАЛЬ ===== -->
+    <details id="mezcal">
+        <summary>🌵 Мескаль <span class="count">1 карточка + 9 регионов</span></summary>
+        <div class="card">
+            <h3>Регионы производства мескаля (9 штатов)</h3>
+            <div class="section">1. <strong>Оахака</strong> — 90%. 2. Дуранго. 3. Гуанахуато. 4. Герреро. 5. Мичоакан. 6. Пуэбла. 7. Сан-Луис-Потоси. 8. Тамаулипас. 9. Сакатекас.</div>
+        </div>
+        <div class="card">
+            <h3>Mezcal Se Busca Joven <span class="tag">100% Espadin</span></h3>
+            <div class="meta"><span>🌍 Мексика</span><span>📍 Оахака</span><span>🍸 40%</span></div>
+            <div class="section"><strong>👃 Органолептика:</strong> Печёная агава, дымок, орехи. 93 балла BTI.</div>
+            <div class="script">💬 «Se Busca — супер-премиум мескаль из Оахаки».</div>
+        </div>
+    </details>
+
+   </div>
+
+</div>
+
+</body>
+</html>    <!-- ===== РОМ ===== -->
+    <details id="rum">
+        <summary>🥃 Ром <span class="count">8 карточек</span></summary>
+
+        <div class="card">
+            <h3>Diplomatico Reserva Exclusiva (Botucal) <span class="tag">Ром</span></h3>
+            <div class="meta"><span>🌍 Венесуэла</span><span>📍 Венесуэла</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Выдержка до 12 лет. Три типа дистилляции: pot still, column still, batch kettle. Тростниковый мёд вместо мелассы.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Шелковистый, обволакивающий. Ириски, какао, сухофрукты, ваниль, корица.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> В чистом виде в снифтере. Горький шоколад, сигары, выдержанные сыры.</div>
+            <div class="script">💬 «Diplomatico Reserva Exclusiva — один из самых титулованных ромов мира. До 12 лет выдержки. Шелковистый, с нотами ирисок и шоколада. Им не запивают — его смакуют».</div>
+            <div class="history"><strong>📜 История:</strong> Производится на винокурне Licorerías Unidas S.A., основанной в 1959 году у подножия Анд. Использует «тростниковый мёд» вместо мелассы. Флагман из старейших резервов. В некоторых странах — Botucal.</div>
+        </div>
+
+        <div class="card">
+            <h3>Ron Barcelo Blanco <span class="tag">Ром</span></h3>
+            <div class="meta"><span>🌍 Доминикана</span><span>📍 Доминикана</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Blanco Añejado. Выдержка до 2 лет в дубовых бочках, затем фильтрация углём до прозрачности.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Мягкий. Зелёный банан, кокос, белый перец, лёгкая ваниль.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Мохито, Дайкири, Cuba Libre.</div>
+            <div class="script">💬 «Ron Barcelo Blanco — не обычный белый ром. Он выдерживается 2 года и фильтруется до прозрачности. Очень мягкий, с нотами банана и кокоса».</div>
+        </div>
+
+        <div class="card">
+            <h3>Ron Barcelo Anejo <span class="tag">Ром</span></h3>
+            <div class="meta"><span>🌍 Доминикана</span><span>📍 Доминикана</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> 100% сок сахарного тростника. Выдержка в бурбонных бочках из американского дуба.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Гладкий, сбалансированный. Ваниль, дуб, сухофрукты.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Cuba Libre, свиные рёбрышки.</div>
+            <div class="script">💬 «Ron Barcelo Anejo — классика Доминиканы. Выдержка в бурбонных бочках даёт мягкий ванильный вкус».</div>
+            <div class="history"><strong>📜 История:</strong> Основан Хулианом Барсело в 1929 году. Один из ведущих экспортёров доминиканского рома.</div>
+        </div>
+
+        <div class="card">
+            <h3>Ron Barcelo Gran Anejo <span class="tag">Ром</span></h3>
+            <div class="meta"><span>🌍 Доминикана</span><span>📍 Доминикана</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Выдержка до 6 лет в дубовых бочках из-под бурбона.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Глубокий, комплексный. Сухофрукты, ваниль, дуб, карамель.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Сигары, горький шоколад, выдержанные сыры.</div>
+            <div class="script">💬 «Ron Barcelo Gran Anejo — премиум-выдержка до 6 лет. Глубокий, элегантный, как хороший виски».</div>
+        </div>
+
+        <div class="card">
+            <h3>Devil's Island Spiced <span class="tag">Ром</span><span class="tag">Пряный</span></h3>
+            <div class="meta"><span>🌍 Доминикана/Россия</span><span>📍 Доминикана</span><span>🍸 37.5%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Пряный ром. Выдержка от 14 до 60 месяцев в дубовых бочках. Novabev Group.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Насыщенный. Корица, ваниль, тростниковая патока.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Коктейли, морепродукты, сыры.</div>
+            <div class="script">💬 «Devil's Island Spiced — ром для приключений. Пряный, насыщенный, с корицей и ванилью».</div>
+        </div>
+
+        <div class="card">
+            <h3>Plantation Original Dark <span class="tag">Ром</span><span class="tag">Тёмный</span></h3>
+            <div class="meta"><span>🌍 Тринидад/Франция</span><span>📍 Карибы/Франция</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Двойная выдержка: сначала на Карибах, затем во Франции. Купаж с 15-летними ромами Ямайки.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Богатый. Спелый банан, карамель, лёгкий дымок.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Mai Tai, Dark 'n' Stormy, BBQ-рёбрышки.</div>
+            <div class="script">💬 «Plantation Original Dark — ром с двойной выдержкой. Карибская душа и французская элегантность».</div>
+        </div>
+
+        <div class="card">
+            <h3>Takamaka Coco <span class="tag">Ликёр</span><span class="tag">Кокосовый</span></h3>
+            <div class="meta"><span>🌍 Сейшелы</span><span>📍 Маэ</span><span>🍸 25%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Кокосовый ликёр на основе белого рома. Натуральный экстракт кокоса.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Свежий кокос, ваниль, тростниковый сок.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Piña Colada, Koko Kolada, тропические десерты.</div>
+            <div class="script">💬 «Takamaka Coco — капля Сейшел в бокале. Свежий кокос и ром».</div>
+            <div class="history"><strong>📜 История:</strong> Семейная винокурня братьев д'Оффе на Сейшелах. Более 20 лет.</div>
+        </div>
+
+        <div class="card">
+            <h3>Takamaka Dark Spiced <span class="tag">Ром</span><span class="tag">Пряный</span></h3>
+            <div class="meta"><span>🌍 Сейшелы</span><span>📍 Маэ</span><span>🍸 38%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Пряный ром с добавлением натуральных эссенций папайи, ванили и тропических специй.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Сладкий. Папайя, ваниль, карамель, травы.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> С тоником, запечённые бананы с корицей.</div>
+            <div class="script">💬 «Takamaka Dark Spiced — флагманский пряный ром Сейшел».</div>
+        </div>
+    </details>
+
+    <!-- ===== ТЕКИЛА ===== -->
+    <details id="tequila">
+        <summary>🌵 Текила <span class="count">5 карточек + 5 регионов</span></summary>
+
+        <div class="card">
+            <h3>Регионы производства текилы <span class="tag">5 штатов</span></h3>
+            <div class="section">
+                Текила может производиться только в <strong>5 штатах Мексики</strong>:<br>
+                1. <strong>Халиско (Jalisco)</strong> — основной регион, 90% всей текилы. Вулканические почвы Лос-Альтос. Jose Cuervo 1800, Agavita, Lokita.<br>
+                2. <strong>Наярит (Nayarit)</strong> — тихоокеанское побережье. De Los Dorados (La Cofradia).<br>
+                3. <strong>Мичоакан (Michoacán)</strong> — высокогорье.<br>
+                4. <strong>Гуанахуато (Guanajuato)</strong> — центральная Мексика.<br>
+                5. <strong>Тамаулипас (Tamaulipas)</strong> — северо-восток, граница с США.
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Jose Cuervo 1800 Blanco <span class="tag">Текила</span><span class="tag">100% агава</span></h3>
+            <div class="meta"><span>🌍 Мексика</span><span>📍 Халиско</span><span>🍸 38%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> 100% голубая агава Вебер. Двойная дистилляция. Купаж отборных белых текил. Семья Бекманн.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Сбалансированный. Печёная агава, масло лайма, белый перец, халапеньо.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Палома, Маргарита, севиче, такос аль пастор.</div>
+            <div class="script">💬 «1800 Blanco от Хосе Куэрво — премиум-текила из 100% агавы с горных ранчо. Двойная дистилляция и купаж дают чистый вкус с перцем и цитрусами».</div>
+            <div class="history"><strong>📜 История:</strong> Jose Cuervo — старейший производитель текилы в мире (основан в 1758 году). Семья Бекманн владеет 11 поколений. 1800 — год первой выдержки текилы в дубе.</div>
+        </div>
+
+        <div class="card">
+            <h3>De Los Dorados Silver <span class="tag">Текила</span><span class="tag">Mixto</span></h3>
+            <div class="meta"><span>🌍 Мексика</span><span>📍 Наярит</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Mixto (не менее 51% агавы + тростниковый сахар). La Cofradia (основана в 1955).</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Острый, чистый. Доминанта агавы, перечная остринка.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Маргарита, сангрита, фахитас.</div>
+            <div class="script">💬 «De Los Dorados Silver — классическая мексиканская текила от семейной компании с полувековой историей».</div>
+        </div>
+
+        <div class="card">
+            <h3>Lokita Blanco Puro Artesanal <span class="tag">Текила</span><span class="tag">100% агава</span></h3>
+            <div class="meta"><span>🌍 Мексика</span><span>📍 Халиско</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> 100% голубая агава до 7 лет. Мастер-дистиллер Армандо Ороско лично отбирает агавы.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Фруктовый. Груша, яблоко, ананас, тамаринд.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Tommy's Margarita (с нектаром агавы), севиче из тропических фруктов.</div>
+            <div class="script">💬 «Lokita — текила с удивительным фруктовым букетом. Груша, яблоко, ананас. Мягкая, элегантная».</div>
+        </div>
+
+        <div class="card">
+            <h3>Agavita Blanco <span class="tag">Текила</span><span class="tag">Mixto</span></h3>
+            <div class="meta"><span>🌍 Мексика</span><span>📍 Халиско</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Mixto. NOM 1420. Cooperativa Tequilera La Magdalena.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Свежий. Агава, травы, цветы, перечная остринка.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Маргарита, Палома, гуакамоле.</div>
+            <div class="script">💬 «Agavita Blanco — честная коктейльная текила. Отлично в Маргарите».</div>
+        </div>
+
+        <div class="card">
+            <h3>Agavita Gold <span class="tag">Текила</span><span class="tag">Mixto</span></h3>
+            <div class="meta"><span>🌍 Мексика</span><span>📍 Халиско</span><span>🍸 38%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Mixto. Выдержка в дубовых бочках (crianza en madera).</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Мягкий, округлый. Карамель, ваниль, лайм, дуб.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Tequila Sunrise, свиные рёбрышки.</div>
+            <div class="script">💬 «Agavita Gold — мягкая выдержанная текила с карамельными нотами».</div>
+        </div>
+    </details>
+
+    <!-- ===== МЕСКАЛЬ ===== -->
+    <details id="mezcal">
+        <summary>🌵 Мескаль <span class="count">1 карточка + 9 регионов</span></summary>
+
+        <div class="card">
+            <h3>Регионы производства мескаля <span class="tag">9 штатов</span></h3>
+            <div class="section">
+                Мескаль может производиться только в <strong>9 штатах Мексики</strong>:<br>
+                1. <strong>Оахака (Oaxaca)</strong> — 90% производства, родина мескаля. Se Busca.<br>
+                2. <strong>Дуранго (Durango)</strong><br>
+                3. <strong>Гуанахуато (Guanajuato)</strong><br>
+                4. <strong>Герреро (Guerrero)</strong><br>
+                5. <strong>Мичоакан (Michoacán)</strong><br>
+                6. <strong>Пуэбла (Puebla)</strong><br>
+                7. <strong>Сан-Луис-Потоси (San Luis Potosí)</strong><br>
+                8. <strong>Тамаулипас (Tamaulipas)</strong><br>
+                9. <strong>Сакатекас (Zacatecas)</strong>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Mezcal Se Busca Joven <span class="tag">Мескаль</span><span class="tag">100% Espadin</span></h3>
+            <div class="meta"><span>🌍 Мексика</span><span>📍 Оахака</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> 100% агава Augustifolia Espadin. 200-летний метод: агава запекается в конических земляных печах. Двойная дистилляция.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Комплексный. Печёная агава, порох, мескит (древесный дымок), орехи, зелёные овощи. 93 балла Beverage Testing Institute.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Mezcalita, Oaxaca Old Fashioned, тако с бараниной, тёмный шоколад.</div>
+            <div class="script">💬 «Se Busca — супер-премиум мескаль из Оахаки. 200-летняя технология: агава запекается в земляных печах. Попробуйте в чистом виде с долькой апельсина».</div>
+            <div class="history"><strong>📜 История:</strong> Se Busca («в розыске») — посвящение женщинам-революционеркам Мексики. Маэстро-мескальеро: семья Лопес Соса. 93 балла и золотая медаль BTI.</div>
+        </div>
+    </details>
+
+    <!-- ===== КОНЬЯК ===== -->
+    <details id="cognac">
+        <summary>🍷 Коньяк <span class="count">3 карточки</span></summary>
+
+        <div class="card">
+            <h3>Camus VSOP <span class="tag">Коньяк</span></h3>
+            <div class="meta"><span>🌍 Франция</span><span>📍 Borderies</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Семейный дом с 1863 года. Регион Бордери. VSOP — не менее 4 лет выдержки. Дистилляция на осадке.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Элегантный. Фиалка, жасмин, абрикос, ваниль, миндаль.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Фуа-гра, улитки, карамельные десерты.</div>
+            <div class="script">💬 «Camus VSOP — коньяк из Бордери, самого маленького и ценимого крю. Фиалковый аромат, элегантный вкус».</div>
+            <div class="history"><strong>📜 История:</strong> Camus — крупнейший независимый семейный коньячный дом. 5 поколений семьи Камю. 280 гектаров собственных виноградников в Бордери.</div>
+        </div>
+
+        <div class="card">
+            <h3>Camus VS <span class="tag">Коньяк</span></h3>
+            <div class="meta"><span>🌍 Франция</span><span>📍 Borderies</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> VS — не менее 2 лет выдержки. Базовый коньяк, созданный для коктейлей.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Свежий, фруктовый. Груша, цитрусовые цукаты, лёгкая ваниль.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Sidecar, French 75, с тоником.</div>
+            <div class="script">💬 «Camus VS — свежий коньяк для коктейлей. Попробуйте с тоником или в Sidecar».</div>
+        </div>
+
+        <div class="card">
+            <h3>Rémy Martin VSOP <span class="tag">Коньяк</span></h3>
+            <div class="meta"><span>🌍 Франция</span><span>📍 Fine Champagne</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Fine Champagne (Grande + Petite Champagne). Спирты выдерживаются от 4 до 14 лет. Основан в 1724 году.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Шелковистый. Жасмин, фиалка, ирис, абрикос, корица, мускатный орех.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Лобстер, фуа-гра, зрелые сыры, белый шоколад.</div>
+            <div class="script">💬 «Rémy Martin VSOP — эталон коньяка Fine Champagne. Жасмин, абрикос, ваниль. Исключительно долгое послевкусие».</div>
+            <div class="history"><strong>📜 История:</strong> Rémy Martin — один из «большой четвёрки» коньячных домов. Производит коньяк исключительно из регионов Grande и Petite Champagne.</div>
+        </div>
+    </details>
+
+    <!-- ===== БРЕНДИ ===== -->
+    <details id="brandy">
+        <summary>🍷 Бренди <span class="count">2 карточки</span></summary>
+
+        <div class="card">
+            <h3>Brandy Torres 5 <span class="tag">Бренди</span></h3>
+            <div class="meta"><span>🌍 Испания</span><span>📍 Пенедес</span><span>🍸 38%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Выдержка по системе солера в бочках из американского дуба. Семья Торрес с 1928 года.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Мягкий. Карамель, ваниль, изюм, дуб.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Кофе, горький шоколад, орехи.</div>
+            <div class="script">💬 «Torres 5 — испанская классика по методу солера. Карамель, ваниль, изюм. Отличный дижестив к кофе».</div>
+            <div class="history"><strong>📜 История:</strong> Легендарная винодельческая семья Торрес из региона Пенедес. Производит бренди с 1928 года. Метод солера — в каждой бутылке есть капля старых спиртов.</div>
+        </div>
+
+        <div class="card">
+            <h3>Brandy Torres 10 <span class="tag">Бренди</span></h3>
+            <div class="meta"><span>🌍 Испания</span><span>📍 Пенедес</span><span>🍸 38%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> 10 лет выдержки по системе солера. Дистилляция в медных кубах.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Бархатистый. Чернослив, инжир, кофе, ваниль, шоколад.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Сигары, выдержанные сыры, тирамису.</div>
+            <div class="script">💬 «Torres 10 — гордость Испании. 10 лет в солере. Чернослив, кофе, шоколад. Конкурирует с коньяками вдвое дороже».</div>
+        </div>
+    </details>
+
+    <!-- ===== КАЛЬВАДОС ===== -->
+    <details id="calvados">
+        <summary>🍎 Кальвадос <span class="count">1 карточка</span></summary>
+
+        <div class="card">
+            <h3>Calvados Christian Drouin <span class="tag">Кальвадос</span></h3>
+            <div class="meta"><span>🌍 Франция</span><span>📍 Нормандия</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Pays d'Auge. 30 сортов яблок и груш из собственных садов. Двойная дистилляция в медных аламбиках. Выдержка в старых бочках из-под коньяка и хереса.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Мягкий, округлый. Печёное яблоко, ваниль, корица, миндаль, мёд.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Нормандский камамбер, яблочный тарт, блины с карамелью.</div>
+            <div class="script">💬 «Christian Drouin — премиальный кальвадос из Нормандии. 30 сортов яблок, двойная дистилляция. Идеален с камамбером и яблочным пирогом».</div>
+            <div class="history"><strong>📜 История:</strong> Семейное хозяйство с 1960 года в регионе Пэи д'Ож. Философия — производить кальвадос, достойный конкурировать с лучшими коньяками.</div>
+        </div>
+    </details>
+
+    <!-- ===== ПИСКО ===== -->
+    <details id="pisco">
+        <summary>🍇 Писко <span class="count">2 карточки</span></summary>
+
+        <div class="card">
+            <h3>Pisco Tabernero <span class="tag">Писко</span><span class="tag">Перу</span></h3>
+            <div class="meta"><span>🌍 Перу</span><span>📍 Ика</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> 100% виноград Кебранта. Одна перегонка в медных аламбиках. Puro — без добавления воды после дистилляции. Bodega Tabernero с 1897 года.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Чистый. Виноград, цитрусовая цедра, белые цветы, травы.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Pisco Sour, Pisco Punch, Capitán, севиче.</div>
+            <div class="script">💬 «Tabernero — классический перуанский писко из долины Ика. Одна перегонка, чистый виноградный вкус. Идеален для Pisco Sour».</div>
+        </div>
+
+        <div class="card">
+            <h3>Pisco Mistral <span class="tag">Писко</span><span class="tag">Чили</span></h3>
+            <div class="meta"><span>🌍 Чили</span><span>📍 Долина Эльки</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Чилийский писко. Двойная дистилляция, разбавление водой. Из винограда Мускатель.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Фруктовый. Мускат, цитрусы, цветы.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Pisco Sour, коктейли с цитрусовыми.</div>
+            <div class="script">💬 «Pisco Mistral — чилийский взгляд на писко. Мускатный виноград, двойная дистилляция».</div>
+        </div>
+    </details>
+
+    <!-- ===== ЧАЧА ===== -->
+    <details id="chacha">
+        <summary>🍇 Чача <span class="count">2 карточки</span></summary>
+
+        <div class="card">
+            <h3>Chacha Askaneli Premium Rkatsiteli <span class="tag">Чача</span></h3>
+            <div class="meta"><span>🌍 Грузия</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Из выжимок винограда Ркацители. Двойная дистилляция в медных кубах. Askaneli Brothers.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Чистый, виноградный. Белый виноград, цитрусы, травы, цветы.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Хачапури, шашлык, соленья, сыры.</div>
+            <div class="script">💬 «Chacha Askaneli Premium — грузинская виноградная водка из Ркацители. Двойная перегонка в меди».</div>
+        </div>
+
+        <div class="card">
+            <h3>Chacha Askaneli Gold <span class="tag">Чача</span><span class="tag">Выдержанная</span></h3>
+            <div class="meta"><span>🌍 Грузия</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Выдержанная чача в дубовых бочках.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Мягкий. Ваниль, дуб, курага, мёд.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Сухофрукты, орехи, мясо на гриле.</div>
+            <div class="script">💬 «Chacha Askaneli Gold — чача, выдержанная в дубе. Мягкий вкус с ванилью и сухофруктами».</div>
+        </div>
+    </details>
+
+    <!-- ===== КАШАСА ===== -->
+    <details id="cachaca">
+        <summary>🇧🇷 Кашаса <span class="count">1 карточка</span></summary>
+
+        <div class="card">
+            <h3>Cachaça 51 <span class="tag">Кашаса</span></h3>
+            <div class="meta"><span>🌍 Бразилия</span><span>📍 Сан-Паулу</span><span>🍸 40%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Самая продаваемая кашаса в мире. Из сока сахарного тростника. Длительная ферментация (3 недели). Дистилляция в колоннах.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Мягкий, сладковатый. Травянистый, землистый, пряная остринка.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Кайпиринья, фейжоада, морепродукты.</div>
+            <div class="script">💬 «Cachaça 51 — легенда Бразилии. Четвёртый по продаваемости крепкий напиток в мире. Именно из неё делают правильную Кайпиринью».</div>
+            <div class="history"><strong>📜 История:</strong> Companhia Müller de Bebidas. Производится с 1951 года. Более 100 миллионов бутылок в год. Экспорт в 50+ стран.</div>
+        </div>
+    </details>
+
+    <!-- ===== ВЕРМУТ ===== -->
+    <details id="vermouth">
+        <summary>🍷 Вермут <span class="count">4 карточки</span></summary>
+
+        <div class="card">
+            <h3>Tête de Cheval Vermouth Blanc <span class="tag">Вермут</span><span class="tag">Франция</span></h3>
+            <div class="meta"><span>🌍 Франция</span><span>📍 Прованс</span><span>🍸 16%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Белое вино с дистиллятами трав Прованса: тимьян, розмарин, лаванда, шалфей.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Сладкий. Мёд, цитрусы, травы, белые цветы.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Аперитив со льдом и лимоном, Blanc Martini.</div>
+            <div class="script">💬 «Tête de Cheval Blanc — вермут из Прованса. Тимьян, розмарин, лаванда. Идеальный аперитив».</div>
+        </div>
+
+        <div class="card">
+            <h3>Garrone Dry <span class="tag">Вермут</span><span class="tag">Италия</span></h3>
+            <div class="meta"><span>🌍 Италия</span><span>📍 Турин</span><span>🍸 18%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Сухой вермут. Белое вино, настоянное на полыни, горечавке, кориандре, цитрусах.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Сухой, травянистый. Белые цветы, цедра лимона, минералы.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Dry Martini, Gibson.</div>
+            <div class="script">💬 «Garrone Dry из Турина — итальянский сухой вермут для Мартини. Травянистый, элегантный».</div>
+        </div>
+
+        <div class="card">
+            <h3>Garrone Bianco <span class="tag">Вермут</span><span class="tag">Италия</span></h3>
+            <div class="meta"><span>🌍 Италия</span><span>📍 Турин</span><span>🍸 16%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Сладкий белый вермут. Ваниль, корица, мускатный орех, гвоздика.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Мягкий. Ваниль, мускат, цитрусовая цедра.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Аперитив со льдом и апельсином, El Presidente.</div>
+            <div class="script">💬 «Garrone Bianco — сладкий белый вермут из Турина. Ваниль, корица, мускат».</div>
+        </div>
+
+        <div class="card">
+            <h3>Garrone Rosso <span class="tag">Вермут</span><span class="tag">Италия</span></h3>
+            <div class="meta"><span>🌍 Италия</span><span>📍 Турин</span><span>🍸 16%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Красный сладкий вермут. Красное вино, полынь, хинин, кора кассии, карамель.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Горько-сладкий. Вишня, карамель, травы, пряности.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Negroni, Americano, Manhattan.</div>
+            <div class="script">💬 «Garrone Rosso — база для Негрони. Горько-сладкий, с хинином и карамелью».</div>
+        </div>
+    </details>
+
+    <!-- ===== АМАРО ===== -->
+    <details id="amaro">
+        <summary>🍷 Амаро <span class="count">2 карточки</span></summary>
+
+        <div class="card">
+            <h3>Amaro Santoni <span class="tag">Амаро</span></h3>
+            <div class="meta"><span>🌍 Италия</span><span>📍 Тоскана</span><span>🍸 25%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Более 30 трав, кореньев и специй: ревень, горечавка, шафран, цитрусовая цедра. Холодная мацерация.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Горько-сладкий, сбалансированный. Карамель, цитрусы, травяная горечь.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Дижестив со льдом, Negroni, Americano.</div>
+            <div class="script">💬 «Amaro Santoni из Тосканы — итальянский травяной ликёр. Более 30 ботаникалов. Горько-сладкий, с карамелью и цитрусами».</div>
+        </div>
+
+        <div class="card">
+            <h3>Campari Bitter <span class="tag">Амаро</span></h3>
+            <div class="meta"><span>🌍 Италия</span><span>📍 Милан</span><span>🍸 25%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Секретный рецепт с 1860 года. Горькие травы, ароматические растения, фрукты, коренья.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Яркий рубиновый. Горько-сладкий. Апельсиновая цедра, травы, хинин, ревень.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Negroni, Americano, Campari Spritz.</div>
+            <div class="script">💬 «Campari — сердце итальянского аперитива. Секретный рецепт с 1860 года. Горько-сладкий, с апельсином и травами».</div>
+        </div>
+    </details>
+
+    <!-- ===== ЛИКЁРЫ ===== -->
+    <details id="liqueur">
+        <summary>🍹 Ликёры <span class="count">5 карточек</span></summary>
+
+        <div class="card">
+            <h3>Hokkaido Yogurt <span class="tag">Ликёр</span><span class="tag">Япония</span></h3>
+            <div class="meta"><span>🌍 Япония</span><span>📍 Хоккайдо</span><span>🍸 12%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Натуральный йогурт и молоко с Хоккайдо. Основа — сётю или нейтральный спирт.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Свежий. Натуральный йогурт, молоко, лёгкая кислинка.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Десерты, с манго, клубникой, панна-котта.</div>
+            <div class="script">💬 «Hokkaido Yogurt — японский йогуртовый ликёр. Вкус свежего йогурта с Хоккайдо».</div>
+        </div>
+
+        <div class="card">
+            <h3>Kahlúa <span class="tag">Ликёр</span><span class="tag">Кофейный</span></h3>
+            <div class="meta"><span>🌍 Мексика</span><span>🍸 20%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> 100% мексиканская арабика, ром, ваниль. Выдержка до 7 лет.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Густой. Жареный кофе, карамель, ваниль, шоколад.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> White Russian, Espresso Martini, с мороженым.</div>
+            <div class="script">💬 «Kahlúa — кофейная легенда из Мексики. Арабика, ром, ваниль. Идеален в White Russian».</div>
+        </div>
+
+        <div class="card">
+            <h3>Baileys <span class="tag">Ликёр</span><span class="tag">Сливочный</span></h3>
+            <div class="meta"><span>🌍 Ирландия</span><span>🍸 17%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Свежие ирландские сливки (38 000 коров) + ирландский виски тройной дистилляции + какао + ваниль.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Густой. Сливки, белый шоколад, карамель, ваниль.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Со льдом, в кофе, B-52, десерты.</div>
+            <div class="script">💬 «Baileys — ирландские сливки и виски в одном бокале. 38 000 коров работают над каждой бутылкой».</div>
+        </div>
+
+        <div class="card">
+            <h3>Jägermeister <span class="tag">Ликёр</span><span class="tag">Травяной</span></h3>
+            <div class="meta"><span>🌍 Германия</span><span>📍 Нижняя Саксония</span><span>🍸 35%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> 56 трав, кореньев, цветов и специй. Выдержка в дубовых бочках около года.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Горько-сладкий. Солодка, анис, имбирь, цитрусовая цедра, пряности.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Ледяной шот из морозилки (-18°C), Jäger Bomb.</div>
+            <div class="script">💬 «Jägermeister — немецкий биттер из 56 трав, выдержанный год в дубе. Пейте ледяным из морозилки».</div>
+        </div>
+
+        <div class="card">
+            <h3>Limoncello di Capri Molinari <span class="tag">Ликёр</span><span class="tag">Лимонный</span></h3>
+            <div class="meta"><span>🌍 Италия</span><span>📍 Амальфи</span><span>🍸 30%</span></div>
+            <div class="section"><strong>📋 Производство:</strong> Цедра лимонов Sfusato Amalfitano (I.G.P.). Мацерация в спирту. Без красителей.</div>
+            <div class="section"><strong>👃 Органолептика:</strong> Густой. Интенсивный свежий лимон, сладость.</div>
+            <div class="section"><strong>🍽 Гастропары:</strong> Ледяной шот, Limoncello Spritz, лимонный сорбет.</div>
+            <div class="script">💬 «Limoncello di Capri — солнце Италии в бокале. Лимонная цедра с Амальфитанского побережья».</div>
+        </div>
+    </details>
+
+    <!-- ===== НАСТОЙКИ ===== -->
+    <details id="nastoyka">
+        <summary>🍹 Настойки <span class="count">8 карточек</span></summary>
+
+        <div class="card"><h3>Белуга Noble Botanicals Роза и Лайм <span class="tag">Настойка</span></h3><div class="meta"><span>🌍 Россия</span><span>🍸 35%</span><span>⚗️ Люкс</span></div><div class="section"><strong>📋</strong> Сладкая. Лепестки розы, цедра лайма.</div><div class="section"><strong>👃</strong> Мягкий. Роза, лайм, сладость.</div></div>
+        <div class="card"><h3>Белуга Noble Botanicals Огурец и Мята <span class="tag">Настойка</span></h3><div class="meta"><span>🌍 Россия</span><span>🍸 35%</span><span>⚗️ Люкс</span></div><div class="section"><strong>📋</strong> Полусладкая. Свежий огурец, мята.</div><div class="section"><strong>👃</strong> Освежающий. Огурец, мята.</div><div class="section"><strong>🍽</strong> Греческий салат, цацики.</div></div>
+        <div class="card"><h3>Белуга Noble Botanicals Груша и Липа <span class="tag">Настойка</span></h3><div class="meta"><span>🌍 Россия</span><span>🍸 30%</span><span>⚗️ Люкс</span></div><div class="section"><strong>📋</strong> Сладкая. Спелая груша, липовый цвет.</div><div class="section"><strong>👃</strong> Мягкий. Груша, мёд, липа.</div><div class="section"><strong>🍽</strong> Грушевый тарт, сыр бри.</div></div>
+        <div class="card"><h3>Онегин Вишня <span class="tag">Настойка</span></h3><div class="meta"><span>🌍 Россия</span><span>🍸 30%</span></div><div class="section"><strong>👃</strong> Яркий вишнёвый, сладкий.</div><div class="section"><strong>🍽</strong> Шоколадные десерты.</div></div>
+        <div class="card"><h3>Онегин Грейпфрут, Миндаль и Лайм <span class="tag">Настойка</span></h3><div class="meta"><span>🌍 Россия</span><span>🍸 30%</span></div><div class="section"><strong>👃</strong> Кисло-сладкий. Цитрус, орех.</div></div>
+        <div class="card"><h3>Онегин Чёрная смородина и Ежевика <span class="tag">Настойка</span></h3><div class="meta"><span>🌍 Россия</span><span>🍸 30%</span></div><div class="section"><strong>👃</strong> Густой. Чёрная смородина, ежевика.</div></div>
+        <div class="card"><h3>Онегин Черноплодная рябина, Кедровый орех и Бузина <span class="tag">Настойка</span></h3><div class="meta"><span>🌍 Россия</span><span>🍸 30%</span></div><div class="section"><strong>👃</strong> Терпкий. Рябина, орех, бузина.</div></div>
+        <div class="card"><h3>Настойка Ткемалевая <span class="tag">Настойка</span></h3><div class="meta"><span>🌍 Россия/Грузия</span><span>🍸 30%</span></div><div class="section"><strong>📋</strong> По мотивам соуса ткемали. Слива, пряные травы.</div><div class="section"><strong>👃</strong> Кисло-сладкий. Слива, пряности.</div><div class="section"><strong>🍽</strong> Шашлык, мясо на гриле.</div></div>
+    </details>
+
+    <!-- ===== ПИВО ===== -->
+    <details id="beer">
+        <summary>🍺 Пиво (всё разливное, кроме б/а) <span class="count">6 карточек</span></summary>
+
+        <div class="card"><h3>Spaten München <span class="tag">Пиво</span></h3><div class="meta"><span>🌍 Германия</span><span>📍 Мюнхен</span><span>🍸 5.2%</span><span>Разливное</span></div><div class="section"><strong>📋</strong> Munich Helles. Пивоварня с 1397 года.</div><div class="section"><strong>👃</strong> Чистый, солодовый, благородная горечь.</div><div class="section"><strong>🍽</strong> Белые колбаски, брецель.</div></div>
+        <div class="card"><h3>Abbé Brune <span class="tag">Пиво</span></h3><div class="meta"><span>🌍 Бельгия</span><span>🍸 6.5%</span><span>Разливное</span></div><div class="section"><strong>📋</strong> Belgian Dubbel. Аббатское пиво.</div><div class="section"><strong>👃</strong> Карамель, изюм, пряности.</div><div class="section"><strong>🍽</strong> Тушёное мясо, выдержанные сыры.</div></div>
+        <div class="card"><h3>Baden Bier Helles <span class="tag">Пиво</span></h3><div class="meta"><span>🌍 Германия</span><span>📍 Баден</span><span>🍸 5%</span><span>Разливное</span></div><div class="section"><strong>📋</strong> Южнонемецкий светлый лагер.</div><div class="section"><strong>👃</strong> Мягкий, солодовый.</div></div>
+        <div class="card"><h3>Hoegaarden <span class="tag">Пиво</span></h3><div class="meta"><span>🌍 Бельгия</span><span>📍 Хугарден</span><span>🍸 4.9%</span><span>Разливное</span></div><div class="section"><strong>📋</strong> Бельгийское белое. Кориандр, апельсиновая цедра.</div><div class="section"><strong>👃</strong> Свежий, пряный.</div><div class="section"><strong>🍽</strong> Салаты, морепродукты.</div></div>
+        <div class="card"><h3>Stella Artois <span class="tag">Пиво</span></h3><div class="meta"><span>🌍 Бельгия</span><span>📍 Лёвен</span><span>🍸 5%</span><span>Разливное</span></div><div class="section"><strong>📋</strong> Премиальный лагер с 1366 года.</div><div class="section"><strong>👃</strong> Чистый, сбалансированный.</div></div>
+        <div class="card"><h3>Black Sheep Stout <span class="tag">Пиво</span></h3><div class="meta"><span>🌍 Ирландия/Россия</span><span>🍸 5.5%</span><span>Разливное</span></div><div class="section"><strong>📋</strong> Тёмный эль в ирландском стиле.</div><div class="section"><strong>👃</strong> Сухой. Кофе, жжёный солод, шоколад.</div><div class="section"><strong>🍽</strong> Устрицы, стейк.</div></div>
+    </details>
+
+    <!-- ===== ИГРИСТЫЕ ===== -->
+    <details id="sparkling">
+        <summary>🥂 Игристые вина <span class="count">5 карточек</span></summary>
+
+        <div class="card"><h3>Bruni Prosecco DOC Brut</h3><div class="meta"><span>🌍 Италия</span><span>📍 Венето</span><span>🍸 11%</span>🍇 Глера</div><div class="section"><strong>👃</strong> Зелёное яблоко, груша, белые цветы.</div><div class="section"><strong>🍽</strong> Аперитив, морепродукты.</div></div>
+        <div class="card"><h3>Valdo Original Brut</h3><div class="meta"><span>🌍 Италия</span><span>📍 Вальдоббьядене</span><span>🍸 11.5%</span>🍇 Глера</div><div class="section"><strong>👃</strong> Цитрусы, зелёное яблоко, минералы.</div><div class="section"><strong>🍽</strong> Ризотто с морепродуктами.</div></div>
+        <div class="card"><h3>Cava Sumarroca Brut Reserva</h3><div class="meta"><span>🌍 Испания</span><span>📍 Пенедес</span><span>🍸 12%</span>🍇 Макабео, Чарелло, Парельяда</div><div class="section"><strong>👃</strong> Кремовый. Поджаренный хлеб, миндаль.</div></div>
+        <div class="card"><h3>Tête de Cheval Brut</h3><div class="meta"><span>🌍 Франция</span><span>📍 Прованс</span><span>🍸 12%</span>🍇 Уни Блан, Коломбар</div><div class="section"><strong>👃</strong> Белые цветы, цитрус, миндаль.</div></div>
+        <div class="card"><h3>Valdo Marco Oro Rosé Brut</h3><div class="meta"><span>🌍 Италия</span><span>📍 Вальдоббьядене</span><span>🍸 11.5%</span>🍇 Глера, Пино Неро</div><div class="section"><strong>👃</strong> Малина, клубника, лепестки роз.</div></div>
+    </details>
+
+    <!-- ===== БЕЛЫЕ ВИНА ===== -->
+    <details id="whitewine">
+        <summary>🥂 Белые вина <span class="count">15 карточек</span></summary>
+
+        <div class="card"><h3>Pinot Grigio Minini</h3><div class="meta"><span>🌍 Италия</span><span>📍 Венето</span>🍇 Пино Гриджио</div><div class="section"><strong>👃</strong> Цитрусы, зелёное яблоко, миндаль.</div></div>
+        <div class="card"><h3>Riesling Hans Baer</h3><div class="meta"><span>🌍 Германия</span><span>📍 Рейнхессен</span>🍇 Рислинг</div><div class="section"><strong>👃</strong> Персик, абрикос, цитрус, минералы.</div></div>
+        <div class="card"><h3>Point Gruner Veltliner</h3><div class="meta"><span>🌍 Австрия</span>🍇 Грюнер Вельтлинер</div><div class="section"><strong>👃</strong> Зелёное яблоко, белый перец, травы.</div></div>
+        <div class="card"><h3>Yuzu Wine</h3><div class="meta"><span>🌍 Япония</span>🍇 Юдзу</div><div class="section"><strong>📋</strong> Фруктовое вино из японского цитруса юдзу.</div></div>
+        <div class="card"><h3>Поместье Голубицкое Шардоне</h3><div class="meta"><span>🌍 Россия</span><span>📍 Тамань</span>🍇 Шардоне</div><div class="section"><strong>👃</strong> Яблоко, груша, цитрусы, минералы.</div></div>
+        <div class="card"><h3>Поместье Голубицкое Совиньон Блан</h3><div class="meta"><span>🌍 Россия</span><span>📍 Тамань</span>🍇 Совиньон Блан</div><div class="section"><strong>👃</strong> Крыжовник, травы, цитрус.</div></div>
+        <div class="card"><h3>Поместье Голубицкое Рислинг</h3><div class="meta"><span>🌍 Россия</span><span>📍 Тамань</span>🍇 Рислинг</div><div class="section"><strong>👃</strong> Яблоко, персик, минералы.</div></div>
+        <div class="card"><h3>Vinho Verde Casal Garcia</h3><div class="meta"><span>🌍 Португалия</span><span>📍 Минью</span>🍇 Аринту, Лоурейру</div><div class="section"><strong>👃</strong> Лимон, лайм, зелёное яблоко, лёгкая игристость.</div></div>
+        <div class="card"><h3>Sauvignon Blanc Zvonko Bogdan</h3><div class="meta"><span>🌍 Сербия</span><span>📍 Палич</span>🍇 Совиньон Блан</div><div class="section"><strong>👃</strong> Тропические фрукты, цитрусы.</div></div>
+        <div class="card"><h3>Favi Valentino La Scolca</h3><div class="meta"><span>🌍 Италия</span><span>📍 Гави</span>🍇 Кортезе</div><div class="section"><strong>👃</strong> Белые цветы, цитрус, миндаль.</div></div>
+        <div class="card"><h3>Pinot Grigio Diligo Anna Spinato</h3><div class="meta"><span>🌍 Италия</span><span>📍 Венето</span>🍇 Пино Гриджио</div><div class="section"><strong>👃</strong> Груша, яблоко, полевые травы. Органическое.</div></div>
+        <div class="card"><h3>Pfefferer Colterenzio</h3><div class="meta"><span>🌍 Италия</span><span>📍 Альто-Адидже</span>🍇 Голден Мускателлер</div><div class="section"><strong>👃</strong> Мускатный орех, белый перец, грейпфрут.</div></div>
+        <div class="card"><h3>Riesling Red Stone</h3><div class="meta"><span>🌍 Германия</span>🍇 Рислинг</div><div class="section"><strong>👃</strong> Лимон, лайм, мокрый камень.</div></div>
+        <div class="card"><h3>Krakhuna Binekhi</h3><div class="meta"><span>🌍 Грузия</span>🍇 Крахуна</div><div class="section"><strong>👃</strong> Тропические фрукты, дыня, травы.</div></div>
+        <div class="card"><h3>Aligote Shumronka Petrikor</h3><div class="meta"><span>🌍 Россия</span>🍇 Алиготе</div><div class="section"><strong>👃</strong> Цитрусы, белые цветы, минералы.</div></div>
+        <div class="card"><h3>Austrian Peach</h3><div class="meta"><span>🌍 Австрия</span>🍇 Рислинг</div><div class="section"><strong>📋</strong> Белое фруктовое вино из Рислинга. Холодная ферментация (10-14°C) для сохранения персиковых лактонов.</div><div class="method"><strong>🔬 Эфирообразование:</strong> лактоны дают аромат спелого персика.</div></div>
+    </details>
+
+    <!-- ===== КРАСНЫЕ ВИНА ===== -->
+    <details id="redwine">
+        <summary>🍷 Красные вина <span class="count">12 карточек</span></summary>
+
+        <div class="card"><h3>Malbec Les Jamelles</h3><div class="meta"><span>🌍 Франция</span><span>📍 Лангедок</span>🍇 Мальбек</div><div class="section"><strong>👃</strong> Чёрная смородина, вишня, чернослив, фиалка.</div></div>
+        <div class="card"><h3>Austrian Cherry Zweigelt</h3><div class="meta"><span>🌍 Австрия</span>🍇 Цвайгельт</div><div class="section"><strong>👃</strong> Яркий вишнёвый, красные ягоды, лакрица.</div><div class="method"><strong>🔬 Эфирообразование:</strong> низкая ферментация (24-26°C), мацерация 7-10 дней, бензальдегид даёт вишнёвый аромат. Выдержка в стали.</div></div>
+        <div class="card"><h3>Pinot Noir Hans Baer</h3><div class="meta"><span>🌍 Германия</span><span>📍 Рейнхессен</span>🍇 Пино Нуар</div><div class="section"><strong>👃</strong> Клубника, малина, вишня, земля, грибы.</div></div>
+        <div class="card"><h3>Lopez de Haro Tempranillo Reserva</h3><div class="meta"><span>🌍 Испания</span><span>📍 Риоха</span>🍇 Темпранильо</div><div class="section"><strong>👃</strong> Вишня, кожа, табак, ваниль, кокос.</div></div>
+        <div class="card"><h3>Мерло Семейный Резерв Сикоры</h3><div class="meta"><span>🌍 Россия</span>🍇 Мерло</div><div class="section"><strong>👃</strong> Слива, вишня, шоколад, ваниль.</div></div>
+        <div class="card"><h3>Каберне Совиньон Семейный Резерв Сикоры</h3><div class="meta"><span>🌍 Россия</span>🍇 Каберне Совиньон</div><div class="section"><strong>👃</strong> Чёрная смородина, кедр, зелёный перец.</div></div>
+        <div class="card"><h3>Zinfandel Crab & More</h3><div class="meta"><span>🌍 США</span><span>📍 Калифорния</span>🍇 Зинфандель</div><div class="section"><strong>👃</strong> Джем, малина, вишня, перец.</div><div class="section"><strong>🍽</strong> Краб, лобстер.</div></div>
+        <div class="card"><h3>Mukuzani Besini</h3><div class="meta"><span>🌍 Грузия</span><span>📍 Кахетия</span>🍇 Саперави</div><div class="section"><strong>👃</strong> Вишнёвый джем, чернослив, дуб, ваниль.</div></div>
+        <div class="card"><h3>Sabado Classic Alazani Valley</h3><div class="meta"><span>🌍 Грузия</span><span>📍 Кахетия</span>🍇 Саперави</div><div class="section"><strong>👃</strong> Мягкий, сладковатый. Вишня, слива.</div></div>
+        <div class="card"><h3>Sabado Gran Mukuzani</h3><div class="meta"><span>🌍 Грузия</span><span>📍 Кахетия</span>🍇 Саперави</div><div class="section"><strong>👃</strong> Чёрные ягоды, кожа, табак, дуб.</div></div>
+        <div class="card"><h3>Poggio ai Genepri</h3><div class="meta"><span>🌍 Италия</span><span>📍 Тоскана</span>🍇 Санджовезе, Каберне</div><div class="section"><strong>👃</strong> Спелая вишня, пряности, табак.</div></div>
+        <div class="card"><h3>Red Dry Petrikor</h3><div class="meta"><span>🌍 Россия</span></div><div class="section"><strong>👃</strong> Ягодное, с мягкими танинами.</div></div>
+    </details>
+
+    <!-- ===== ОРАНЖЕВЫЕ ВИНА ===== -->
+    <details id="orangewine">
+        <summary>🍷 Оранжевые вина (Amber Wine) <span class="count">2 карточки</span></summary>
+
+        <div class="card"><h3>Sabado Gran Mtsvane Qvevri Orange</h3><div class="meta"><span>🌍 Грузия</span><span>📍 Кахетия</span>🍇 Мцване</div><div class="section"><strong>📋</strong> Квеври. Длительная мацерация на кожице.</div><div class="section"><strong>👃</strong> Сухофрукты, апельсиновая цедра, чай, специи.</div></div>
+        <div class="card"><h3>Loco Cimbali Orange</h3><div class="meta"><span>🌍 Италия</span><span>📍 Сицилия</span>🍇 Катарратто</div><div class="section"><strong>👃</strong> Апельсиновая цедра, абрикос, чай, мёд.</div></div>
+    </details>
+
+    <!-- ===== РОЗОВЫЕ ===== -->
+    <details id="rosewine">
+        <summary>💗 Розовые вина <span class="count">1 карточка</span></summary>
+
+        <div class="card"><h3>Vinho Verde Casal Garcia Rosé</h3><div class="meta"><span>🌍 Португалия</span><span>📍 Минью</span>🍇 Эшпадейру, Турига Насьональ</div><div class="section"><strong>👃</strong> Малина, клубника, вишня, лёгкая игристость.</div></div>
+    </details>
+
+    <!-- ===== САКЕ ===== -->
+    <details id="sake">
+        <summary>🍶 Саке <span class="count">1 карточка</span></summary>
+
+        <div class="card"><h3>Iku's Shiro</h3><div class="meta"><span>🌍 Япония</span><span>📍 Гифу</span><span>🍸 15%</span></div><div class="section"><strong>📋</strong> Junmai Daiginjo. Рис Ямаданисики.</div><div class="section"><strong>👃</strong> Дыня, груша, белые цветы, минералы.</div><div class="section"><strong>🍽</strong> Сашими из белой рыбы, устрицы.</div></div>
+    </details>
+
+    <!-- ===== ЧАЙ ===== -->
+    <details id="tea">
+        <summary>🍵 Чай <span class="count">11 карточек</span></summary>
+
+        <div class="card"><h3>Ассам Цветок весны</h3><div class="meta"><span>🌍 Индия</span><span>📍 Ассам</span></div><div class="section"><strong>👃</strong> Насыщенный. Солод, мёд, сухофрукты.</div></div>
+        <div class="card"><h3>Изысканный бергамот</h3><div class="section"><strong>👃</strong> Чёрный чай, бергамот, цитрус.</div></div>
+        <div class="card"><h3>Пуэр Юньань 3 года</h3><div class="meta"><span>🌍 Китай</span><span>📍 Юньань</span></div><div class="section"><strong>👃</strong> Землистый. Чернослив, орехи.</div></div>
+        <div class="card"><h3>Сенча Туманная Гора</h3><div class="meta"><span>🌍 Япония</span></div><div class="section"><strong>👃</strong> Мягкий. Умами, морские водоросли.</div></div>
+        <div class="card"><h3>Ароматный жасмин</h3><div class="meta"><span>🌍 Китай</span></div><div class="section"><strong>👃</strong> Цветочный, сладкий жасмин.</div></div>
+        <div class="card"><h3>Гречишный чай</h3><div class="section"><strong>👃</strong> Ореховый. Печенье, карамель. Без кофеина.</div></div>
+        <div class="card"><h3>Малина-мята</h3><div class="section"><strong>👃</strong> Кисло-сладкий. Малина, мята.</div></div>
+        <div class="card"><h3>Вечерний травяной Германский</h3><div class="section"><strong>👃</strong> Мята, мелисса, ромашка. Успокаивающий.</div></div>
+        <div class="card"><h3>Алтайский иван-чай</h3><div class="meta"><span>🌍 Россия</span><span>📍 Алтай</span></div><div class="section"><strong>👃</strong> Мягкий. Сушёные яблоки, мёд.</div></div>
+        <div class="card"><h3>Русские традиции</h3><div class="section"><strong>👃</strong> Чёрный чай, чабрец, душица, мята.</div></div>
+        <div class="card"><h3>Краски Крыма</h3><div class="meta"><span>🌍 Россия</span><span>📍 Крым</span></div><div class="section"><strong>👃</strong> Лаванда, лимон, розы. Освежающий.</div></div>
+    </details>
+
+    <!-- ===== Б/А ===== -->
+    <details id="nonalco">
+        <summary>💧 Безалкогольная продукция <span class="count">9 карточек</span></summary>
+
+        <div class="card"><h3>Stella Artois б/а</h3><div class="meta"><span>🌍 Бельгия</span><span>📍 Лёвен</span><span>🍸 0.0%</span> Бутылка</div><div class="section"><strong>👃</strong> Мягкий, солодовый.</div></div>
+        <div class="card"><h3>Cielo Zero</h3><div class="meta"><span>🌍 Италия</span><span>📍 Венето</span><span>🍸 0.0%</span></div><div class="section"><strong>👃</strong> Цитрусовое, свежее.</div></div>
+        <div class="card"><h3>Dr. Pepper</h3><div class="meta"><span>🌍 США</span></div><div class="section"><strong>📋</strong> Легендарный напиток с 1885 года. 23 фрукта и специи.</div></div>
+        <div class="card"><h3>Имбирное пиво The Gardenist</h3><div class="meta"><span>🌍 Россия</span></div><div class="section"><strong>👃</strong> Жгучий имбирь, груша. Миксер для Moscow Mule.</div></div>
+        <div class="card"><h3>Грейпфрутовый тоник The Gardenist</h3><div class="meta"><span>🌍 Россия</span></div><div class="section"><strong>👃</strong> Сочный грейпфрут, хинин.</div></div>
+        <div class="card"><h3>Тоник Rich</h3><div class="meta"><span>🌍 Россия</span></div></div>
+        <div class="card"><h3>Tassay Excellent</h3><div class="meta"><span>🌍 Казахстан</span><span>📍 Тянь-Шань</span></div><div class="section"><strong>📋</strong> Негазированная вода. Фильтрация серебром.</div></div>
+        <div class="card"><h3>Tassay Emerald</h3><div class="meta"><span>🌍 Казахстан</span><span>📍 Тянь-Шань</span></div><div class="section"><strong>📋</strong> Газированная вода. Фильтрация серебром.</div></div>
+        <div class="card"><h3>Аква Русса</h3><div class="meta"><span>🌍 Россия</span><span>📍 Новгород</span></div></div>
+    </details>
+
+    <div class="footer">⭐ Старший Бармен Супер — Любим ⭐</div>
